@@ -1,0 +1,20 @@
+{
+    "name": "kevinsimard/laravel-sorted-queue",
+    "description": "Laravel sorted queue driver",
+    "keywords": ["laravel", "queue", "sorted", "distributed"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Simard",
+            "email": "kev.simard@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/queue": "5.2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kevinsimard\\LaravelSortedQueue\\": "src/"
+        }
+    }
+}
