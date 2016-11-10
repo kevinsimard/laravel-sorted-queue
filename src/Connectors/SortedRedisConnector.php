@@ -14,10 +14,10 @@ class SortedRedisConnector extends RedisConnector
     public function connect(array $config)
     {
         $queue = new SortedRedisQueue(
-            $this->redis, $config['queue'], Arr::get($config, 'connection', $this->connection)
+            $this->redis, $config["queue"], Arr::get($config, "connection", $this->connection)
         );
 
-        $queue->setExpire(Arr::get($config, 'expire', 60));
+        $queue->setExpire(Arr::get($config, "expire", 60));
 
         return $queue;
     }

@@ -70,7 +70,7 @@ class SortedRedisQueue extends RedisQueue
         }
 
         $this->getConnection()->zadd(
-            'sortedqueue:delayed', $this->getTime() + $seconds, $queue
+            "sortedqueue:delayed", $this->getTime() + $seconds, $queue
         );
 
         return (bool) $status;
@@ -95,11 +95,11 @@ class SortedRedisQueue extends RedisQueue
     public function migrateDelayedQueues()
     {
         $queues = $this->getConnection()->zrangebyscore(
-            $key = 'sortedqueue:delayed', '-inf', $time = $this->getTime()
+            $key = "sortedqueue:delayed", "-inf", $time = $this->getTime()
         );
 
         if (count($queues) > 0) {
-            $this->getConnection()->zremrangebyscore($key, '-inf', $time);
+            $this->getConnection()->zremrangebyscore($key, "-inf", $time);
 
             foreach ($queues as $queue) {
                 $this->addQueueIfNotLocked($queue);
@@ -116,13 +116,13 @@ class SortedRedisQueue extends RedisQueue
 
         do {
             list($cursor, $queues) = $this->getConnection()->scan(
-                $cursor, 'MATCH', 'queues:*:*'
+                $cursor, "MATCH", "queues:*:*"
             );
 
             foreach ($queues as $from) {
-                if (ends_with($from, ':delayed')) {
+                if (ends_with($from, ":delayed")) {
                     $to = substr($from, 0, -8);
-                } else if (ends_with($from, ':reserved')) {
+                } else if (ends_with($from, ":reserved")) {
                     $to = substr($from, 0, -9);
                 } else {
                     continue;
@@ -138,7 +138,7 @@ class SortedRedisQueue extends RedisQueue
      */
     protected function popQueue()
     {
-        $queue = $this->getConnection()->spop('sortedqueue:queues');
+        $queue = $this->getConnection()->spop("sortedqueue:queues");
 
         if (! is_null($queue)) {
             if (! $this->lockQueue($queue)) {
@@ -159,7 +159,7 @@ class SortedRedisQueue extends RedisQueue
 
         if (! is_null($job)) {
             $this->getConnection()->zadd(
-                $this->getQueue($queue).':reserved', $this->getTime() + $this->expire, $job
+                $this->getQueue($queue).":reserved", $this->getTime() + $this->expire, $job
             );
 
             return new RedisJob($this->container, $this, $job, $queue);
@@ -173,7 +173,7 @@ class SortedRedisQueue extends RedisQueue
     protected function addQueueIfNotLocked($queue)
     {
         if (! $this->isQueueLocked($queue) && ! $this->isQueueEmpty($queue)) {
-            $this->getConnection()->sadd('sortedqueue:queues', $queue);
+            $this->getConnection()->sadd("sortedqueue:queues", $queue);
         }
     }
 

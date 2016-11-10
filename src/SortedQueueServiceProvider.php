@@ -37,7 +37,7 @@ class SortedQueueServiceProvider extends QueueServiceProvider
     protected function registerEvents()
     {
         $callback = function ($event) {
-            if (method_exists($event->job, 'getRedisQueue')) {
+            if (method_exists($event->job, "getRedisQueue")) {
                 $redisQueue = $event->job->getRedisQueue();
 
                 if ($redisQueue instanceof SortedRedisQueue) {
@@ -46,9 +46,9 @@ class SortedQueueServiceProvider extends QueueServiceProvider
             }
         };
 
-        $this->app['events']->listen(JobFailed::class, $callback);
-        $this->app['events']->listen(JobProcessed::class, $callback);
-        $this->app['events']->listen(JobExceptionOccurred::class, $callback);
+        $this->app["events"]->listen(JobFailed::class, $callback);
+        $this->app["events"]->listen(JobProcessed::class, $callback);
+        $this->app["events"]->listen(JobExceptionOccurred::class, $callback);
     }
 
     /**
@@ -59,8 +59,8 @@ class SortedQueueServiceProvider extends QueueServiceProvider
     {
         $app = $this->app;
 
-        $manager->addConnector('sorted-redis', function () use ($app) {
-            return new SortedRedisConnector($app['redis']);
+        $manager->addConnector("sorted-redis", function () use ($app) {
+            return new SortedRedisConnector($app["redis"]);
         });
     }
 }
